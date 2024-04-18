@@ -1,0 +1,42 @@
+CREATE TABLE LANDING.employees (
+    employee_id BIGINT NOT NULL,
+    name VARCHAR(100),
+    department VARCHAR(50),
+    salary DECIMAL(10, 2)
+    );
+    
+  ALTER TABLE LANDING.employees      
+  ADD PRIMARY KEY (employee_id)
+
+-- Insert records for three departments
+INSERT INTO LANDING.employees (EMPLOYEE_ID,name, department, salary) VALUES 
+(1,'John Doe', 'Engineering', 63000),
+(2,'Jane Smith', 'Engineering', 55000),
+(3,'Michael Johnson', 'Engineering', 64000),
+(4,'Emily Davis', 'Marketing', 58000),
+(5,'Chris Brown', 'Marketing', 56000),
+(6,'Emma Wilson', 'Marketing', 59000),
+(7,'Alex Lee', 'Sales', 58000),
+(8,'Sarah Adams', 'Sales', 58000),
+(9,'Ryan Clark', 'Sales', 61000);
+
+
+SELECT * FROM LANDING.employees ;
+
+
+--Write the SQL query to find the second highest salary
+
+SELECT * FROM 
+(SELECT  *,
+DENSE_RANK  () OVER (ORDER BY Salary DESC) AS SALRN
+FROM LANDING.employees) A
+WHERE A.SALRN = 2;
+
+
+-- Question: Get the details of the employee with the second-highest salary from each department
+
+SELECT * FROM 
+(SELECT  *,
+DENSE_RANK  () OVER (PARTITION BY DEPARTMENT ORDER BY Salary DESC) AS SALRN
+FROM LANDING.employees) A
+WHERE A.SALRN = 2;
