@@ -1,0 +1,63 @@
+
+create table landing.orders1(
+  	category varchar(20),
+	product varchar(20),
+	user_id int , 
+  	spend int,
+  	transaction_date varchar(20)
+);
+
+Insert into landing.orders1 values
+('appliance','refrigerator',165,246.00,'2021/12/26'),
+('appliance','refrigerator',123,299.99,'2022/03/02'),
+('appliance','washingmachine',123,219.80,'2022/03/02'),
+('electronics','vacuum',178,152.00,'2022/04/05'),
+('electronics','wirelessheadset',156,	249.90,'2022/07/08'),
+('electronics','TV',145,189.00,'2022/07/15'),
+('Television','TV',165,129.00,'2022/07/15'),
+('Television','TV',163,129.00,'2022/07/15'),
+('Television','TV',141,129.00,'2022/07/15'),
+('toys','Ben10',145,189.00,'2022/07/15'),
+('toys','Ben10',145,189.00,'2022/07/15'),
+('toys','yoyo',165,129.00,'2022/07/15'),
+('toys','yoyo',163,129.00,'2022/07/15'),
+('toys','yoyo',141,129.00,'2022/07/15'),
+('toys','yoyo',145,189.00,'2022/07/15'),
+('electronics','vacuum',145,189.00,'2022/07/15');
+
+
+SELECT * FROM landing.orders1;
+
+
+/*
+Find the top 2 products in the top 2 categories based on spend amount?
+*/
+
+
+WITH CAT AS 
+(
+    SELECT SUM(SPEND) AS TOTAL_SPEND, Category 
+    FROM landing.orders1 
+    GROUP BY Category
+    ORDER BY Category DESC
+    FETCH FIRST 2 ROWS ONLY
+),
+PRO AS
+(
+    SELECT 
+    ROW_NUMBER  () OVER( PARTITION BY Category ORDER BY SUM(SPEND) DESC) AS RNK,
+    SUM(SPEND) AS PRO_SPEND, Category, product 
+    FROM landing.orders1 
+    GROUP BY 
+    Category, product 
+)
+
+SELECT A.Category, B.product, B.PRO_SPEND
+FROM CAT A 
+INNER JOIN PRO B ON A.Category = B.Category
+WHERE B.RNK in (1,2)
+
+
+
+
+

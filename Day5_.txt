@@ -1,0 +1,14 @@
+/*
+
+Write a SQL query to retrieve the 
+third highest salary from the Employee table.
+
+*/
+
+SELECT * FROM Landing.Employees;
+
+SELECT DISTINCT SALARY FROM (
+SELECT Salary ,
+DENSE_RANK () OVER (ORDER BY SALARY ) AS RNK 
+FROM Landing.Employees
+) A WHERE A.RNK =3 ;
